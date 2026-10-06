@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/ccu395/projects/spring-sim/build/Release",
+  "command": "/usr/bin/cc -I/home/ccu395/projects/spring-sim/include -m64 -O3 -DNDEBUG -std=gnu17 -Wall -Wextra -Wpedantic -o CMakeFiles/spring.dir/src/integrators.c.o -c /home/ccu395/projects/spring-sim/src/integrators.c",
+  "file": "/home/ccu395/projects/spring-sim/src/integrators.c",
+  "output": "/home/ccu395/projects/spring-sim/build/Release/CMakeFiles/spring.dir/src/integrators.c.o"
+},
+{
+  "directory": "/home/ccu395/projects/spring-sim/build/Release",
+  "command": "/usr/bin/cc -I/home/ccu395/projects/spring-sim/include -m64 -O3 -DNDEBUG -std=gnu17 -Wall -Wextra -Wpedantic -o CMakeFiles/spring_sim.dir/src/main.c.o -c /home/ccu395/projects/spring-sim/src/main.c",
+  "file": "/home/ccu395/projects/spring-sim/src/main.c",
+  "output": "/home/ccu395/projects/spring-sim/build/Release/CMakeFiles/spring_sim.dir/src/main.c.o"
+}
+]

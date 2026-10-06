@@ -1,0 +1,1 @@
+. "/home/ccu395/projects/spring-sim/build/Release/generators/conanrunenv-release-x86_64.sh"
