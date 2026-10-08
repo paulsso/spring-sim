@@ -22,7 +22,7 @@ void step_euler(SpringState *s, const SpringParams *p, double dt, DerivFn f)
   s->t += dt;
 }
 
-void step_sympletctic_euler(SpringState *s, const SpringParams *p, double dt, DerivFn f)
+void step_sympletic_euler(SpringState *s, const SpringParams *p, double dt, DerivFn f)
 {
   double dxdt, dvdt;
   f(s, p, &dxdt, &dvdt);
