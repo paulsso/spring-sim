@@ -5,7 +5,7 @@ typedef struct {
  double m;
  double c;
  double k;
- double FO;
+ double F0;
  double omega;
 } SpringParams;
 

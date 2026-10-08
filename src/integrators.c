@@ -33,14 +33,44 @@ void step_sympletctic_euler(SpringState *s, const SpringParams *p, double dt, De
 
 void step_verlet(SpringState *s, const SpringParams *p, double dt, DerivFn f)
 {
-  /* TODO: velocity Verlet, Think about how damping fits a scheme that assumes acceleration depends on x only */
-  (void)p; (void)f;
+  double dxdt, dvdt, dvdt_next;
+  f(s, p, &dxdt, &dvdt);
+  s->x += dt*dxdt + ( dvdt * pow(dt,2) ) / 2;
+  
   s->t += dt;
+  f(s, p, &dxdt, &dvdt_next);
+  s->v += 0.5*dt*(dvdt + dvdt_next);
 }
 
 void step_rk4(SpringState *s, const SpringParams *p, double dt, DerivFn f)
 { 
-  /* TODO: four stages k1..k4 using temporary SpringState copies */
-  (void)p; (void)f;
+  double dxdt, dvdt, k1x, k2x, k3x, k4x, k1v, k2v, k3v, k4v;
+  SpringState y0 = *s;
+  f(&y0, p, &dxdt, &dvdt);
+  k1x = dxdt;
+  k1v = dvdt;
+
+  y0.t += dt/2;
+  y0.x += k1x*(dt/2);
+  y0.v += k1v*(dt/2);
+  f(&y0, p, &dxdt, &dvdt);
+  k2x = dxdt;
+  k2v = dvdt;
+
+  y0.x += -k1x*(dt/2) + k2x*(dt/2);
+  y0.v += -k1v*(dt/2) + k2v*(dt/2);
+  f(&y0, p, &dxdt, &dvdt);
+  k3x = dxdt;
+  k3v = dvdt;
+
+  y0.t += dt/2;
+  y0.x += -k2x*(dt/2) + k3x*dt;
+  y0.v += -k2v*(dt/2) + k3v*dt;
+  f(&y0, p, &dxdt, &dvdt);
+  k4x = dxdt;
+  k4v = dvdt;
+
+  s->x += (dt / 6)*(k1x + 2*k2x + 2*k3x + k4x);
+  s->v += (dt / 6)*(k1v + 2*k2v + 2*k3v + k4v);
   s->t += dt;
 }
