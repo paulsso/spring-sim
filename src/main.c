@@ -38,6 +38,7 @@ static int parse_double(const char *str, double *out);
 
 // TODO: Search a {name, StepFn} table, return NULL if not found
 static StepFn lookup_integrator(const char *name);
+
 int main(int argc, char *argv[])
 { 
   SpringParams p = { .m = 1.0, .c = 0.0, .k = 1.0, .F0 = 0.0, .omega = 0.0 };
