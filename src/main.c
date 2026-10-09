@@ -133,10 +133,13 @@ int main(int argc, char *argv[])
   }
 
   if (optind < argc) {
-    fprintf(stderr, "unexpedted argument '%s'\n", argv[optind]);
+    fprintf(stderr, "unexpected argument '%s'\n", argv[optind]);
     return EXIT_FAILURE;
   }
 
+goto special_cases;
+
+resume:
   printf("t,x,v,E\n");
   while (s.t < t_end) {
     printf("%.6f,%.10f,%.10f,%10f\n", s.t, s.x, s.v, spring_energy(&s, &p));
@@ -148,7 +151,23 @@ int main(int argc, char *argv[])
   bad_value:
     fprintf(stderr, "[ERROR] invalid input '%s' to --%s (-%c) \n", optarg, option_name(opt), opt);
     return EXIT_FAILURE;
+
   help:
     usage(argv[0]);
     return EXIT_SUCCESS;
+
+  special_cases:
+    if (dt < 0) { 
+      fprintf(stderr, "[ERROR] dt cannot be less than 0\n");
+      return EXIT_FAILURE;
+    }
+    if (t_end < 1.0) {
+      fprintf(stderr, "[ERROR] t_end should not be less than 1\n");
+      return EXIT_FAILURE;
+    }
+    if (p.m <= 0) {
+      fprintf(stderr, "[ERROR] mass has to be greater than 0\n");
+      return EXIT_FAILURE;
+    }
+    goto resume;
 }
