@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <math.h>
+#include <errno.h>
+#include <string.h>
 #include "spring.h"
 
 enum {
@@ -28,24 +31,40 @@ static const struct option longopts[] = {
     {NULL, 0, NULL, 0}
 };
 
-static void usage(const char *prog) {
-  // TODO: List the options and defaults; print to stderr
-  fprintf(stderr, "usage: %s [options]\n");
+static int parse_double(const char *str, double *out) {
+  char *end;
+  errno = 0;
+  double val = strtod(str, &end);
+  if (*end != '\0' || end == str || errno == ERANGE
+    || isnan(val)) {
+    return 1;
+  }
+  *out = val;
+  return 0;
 }
 
-// TODO: strtod plus checks for end pointer, trailing junk and errno.
-static int parse_double(const char *str, double *out);
-
-// TODO: Search a {name, StepFn} table, return NULL if not found
-static StepFn lookup_integrator(const char *name);
+static StepFn lookup_integrator(const char *name, StepFn *fun) {
+  StepFn ret = NULL;
+  if (strcmp(name,"rk4") == 0) {
+    ret = step_rk4;
+  } else if (strcmp(name,"euler") == 0) {
+    ret = step_euler;
+  } else if (strcmp(name,"sympletic_euler") == 0) { 
+    ret = step_sympletic_euler;
+  } else if (strcmp(name,"verlet") == 0) {
+    ret = step_verlet;
+  }
+  if (ret != NULL) *fun = ret;
+  return ret;
+}
 
 int main(int argc, char *argv[])
 { 
   SpringParams p = { .m = 1.0, .c = 0.0, .k = 1.0, .F0 = 0.0, .omega = 0.0 };
   SpringState  s = { .t = 0.0, .x = 1.0, .v = 0.0 };
 
-  const double dt     = 0.01;
-  const double t_end  = 20.0;
+  double dt     = 0.01;
+  double t_end  = 20.0;
   StepFn step = step_euler;
 
   int opt;
@@ -78,6 +97,9 @@ int main(int argc, char *argv[])
       case OPT_TEND:
         if (parse_double(optarg, &t_end) != 0) goto bad_value;
         break;
+      case 'i':
+        if(lookup_integrator(optarg, &step) == NULL) goto bad_value;
+        break;
       case 'h':
         break;
       default:
@@ -85,18 +107,22 @@ int main(int argc, char *argv[])
     }
   }
 
+  
+
   if (optind < argc) {
     fprintf(stderr, "unexpedted argument '%s'\n", argv[optind]);
     return EXIT_FAILURE;
   }
-  
-  // TODO: Validate input values
 
   printf("t,x,v,E\n");
   while (s.t < t_end) {
     printf("%.6f,%.10f,%.10f,%10f\n", s.t, s.x, s.v, spring_energy(&s, &p));
     step(&s, &p, dt, spring_deriv);
   }
+
+bad_value:
+  fprintf(stderr, "[ERROR] \n");
+  return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }
