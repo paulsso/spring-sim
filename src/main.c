@@ -43,6 +43,15 @@ static int parse_double(const char *str, double *out) {
   return 0;
 }
 
+static const char *option_name(const int val) {
+  for (const struct option *o = longopts; o->name != NULL; o++) {
+    if (o->val == val) {
+      return o->name;
+    }
+  }
+  return "?";
+}
+
 static StepFn lookup_integrator(const char *name, StepFn *fun) {
   StepFn ret = NULL;
   if (strcmp(name,"rk4") == 0) {
@@ -121,7 +130,7 @@ int main(int argc, char *argv[])
   return EXIT_SUCCESS;
   
   bad_value:
-    fprintf(stderr, "[ERROR] \n");
+    fprintf(stderr, "[ERROR] invalid input '%s' to --%s (-%c) \n", optarg, option_name(opt), opt);
     return EXIT_FAILURE;
 
 }
