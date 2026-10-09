@@ -15,6 +15,22 @@ enum {
   OPT_TEND
 };
 
+static void usage(char *prog) {
+  fprintf(stderr, "usage: %s \n"
+  "FLAG             |  TYPE                                         |   DEFAULT\n"
+  "--mass, -m       |  double                                       |   1.0\n"
+  "--damping, -c    |   ..                                          |   0.0\n"
+  "--stiffness, -k  |   ..                                          |   1.0\n"
+  "--integrator, -i |   string (euler, sympletic_euler, verlet, rk4) \n"
+  "--x0             |   double\n"
+  "--v0             |   ..\n"
+  "--F0             |   ..\n"
+  "--omega          |   ..\n"
+  "--dt             |   ..\n"
+  "--tend           |   ..\n"
+  "--help, -h       |   NO_ARG\n", prog);
+}
+
 static const struct option longopts[] = {
     /* name,                has_arg,            flag, val */
     {"mass",                required_argument,  NULL, 'm'},
@@ -110,7 +126,7 @@ int main(int argc, char *argv[])
         if(lookup_integrator(optarg, &step) == NULL) goto bad_value;
         break;
       case 'h':
-        break;
+        goto help;
       default:
         return EXIT_FAILURE;
     }
@@ -132,5 +148,7 @@ int main(int argc, char *argv[])
   bad_value:
     fprintf(stderr, "[ERROR] invalid input '%s' to --%s (-%c) \n", optarg, option_name(opt), opt);
     return EXIT_FAILURE;
-
+  help:
+    usage(argv[0]);
+    return EXIT_SUCCESS;
 }
