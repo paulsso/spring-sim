@@ -107,8 +107,6 @@ int main(int argc, char *argv[])
     }
   }
 
-  
-
   if (optind < argc) {
     fprintf(stderr, "unexpedted argument '%s'\n", argv[optind]);
     return EXIT_FAILURE;
@@ -120,9 +118,10 @@ int main(int argc, char *argv[])
     step(&s, &p, dt, spring_deriv);
   }
 
-bad_value:
-  fprintf(stderr, "[ERROR] \n");
-  return EXIT_FAILURE;
-
   return EXIT_SUCCESS;
+  
+  bad_value:
+    fprintf(stderr, "[ERROR] \n");
+    return EXIT_FAILURE;
+
 }
