@@ -13,12 +13,15 @@ if(ENABLE_SANITIZERS)
   add_link_options(-fsanitize=address,undefined)
 endif()
 
-add_library(spring src/integrators.c)
+add_library(spring ode/ode.c)
 target_include_directories(spring PUBLIC include)
 target_link_libraries(spring PUBLIC m)
 
-add_executable(spring_sim src/main.c)
-target_link_libraries(spring_sim PRIVATE spring)
+add_executable(spring1d_sim apps/spring1d_main.c)
+target_link_libraries(spring1d_sim PRIVATE spring1d)
+
+add_executable(spring2d_sim apps/spring2d_main.c)
+target_link_libraries(spring2d_sim PRIVATE spring2d)
 
 # enable_testing()
 # find_package(cmocka REQUIRED)
