@@ -13,9 +13,17 @@ if(ENABLE_SANITIZERS)
   add_link_options(-fsanitize=address,undefined)
 endif()
 
-add_library(spring ode/ode.c)
-target_include_directories(spring PUBLIC include)
-target_link_libraries(spring PUBLIC m)
+add_library(ode ode/ode.c)
+target_include_directories(ode PUBLIC ode)
+target_link_libraries(ode PUBLIC m)
+
+add_library(spring1d ode/ode.c systems/spring1d/spring1d.c)
+target_include_directories(spring1d PUBLIC ode systems/spring1d)
+target_link_libraries(spring1d PUBLIC m)
+
+add_library(spring2d ode/ode.c systems/spring2d/spring2d.c)
+target_include_directories(spring2d PUBLIC ode systems/spring2d)
+target_link_libraries(spring2d PUBLIC m)
 
 add_executable(spring1d_sim apps/spring1d_main.c)
 target_link_libraries(spring1d_sim PRIVATE spring1d)
