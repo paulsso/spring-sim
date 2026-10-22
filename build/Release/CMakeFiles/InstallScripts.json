@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/ccu395/projects/spring-sim/build/Release/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
